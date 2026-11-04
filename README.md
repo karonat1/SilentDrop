@@ -205,6 +205,6 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 <div align="center">
 
 **Made with ❤️ for the Minecraft community.**
-If SilentDrop helps your server, please leave a review on [SpigotMC](https://www.spigotmc.org/resources/silentdrop.XXXXX/)!
+If SilentDrop helps your server, please leave a review on [SpigotMC](https://github.com/karonat1/SilentDrop/blob/main/LICENSE.txt/)!
 
 </div>
