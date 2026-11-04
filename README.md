@@ -10,7 +10,7 @@
 [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](LICENSE.txt)
 [![Java](https://img.shields.io/badge/Java-8%2B-orange.svg)](https://www.java.com/)
 
-[Download](https://github.com/karonat1/SilentDrop/releases/tag/release) • [Spigot Page](https://www.spigotmc.org/resources/silentdrop.XXXXX/) • [Release](https://github.com/karonat1/SilentDrop/releases/tag/release)
+[Download](https://github.com/karonat1/SilentDrop/releases/tag/release) • [Spigot Page](https://www.spigotmc.org/resources/silentdrop-instant-group-loot-distribution-no-lag-anti-theft.140249//) • [Release](https://github.com/karonat1/SilentDrop/releases/tag/release)
 
 </div>
 
@@ -205,6 +205,6 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 <div align="center">
 
 **Made with ❤️ for the Minecraft community.**
-If SilentDrop helps your server, please leave a review on [SpigotMC](https://www.spigotmc.org/resources/silentdrop.XXXXX/)!
+If SilentDrop helps your server, please leave a review on [SpigotMC](https://www.spigotmc.org/resources/silentdrop-instant-group-loot-distribution-no-lag-anti-theft.140249/)!
 
 </div>
