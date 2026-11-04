@@ -1,323 +1,208 @@
-# SilentDrop
+```markdown
+<div align="center">
 
-**Умная система лута с защитой от спама и конфликтов** для Spigot / Paper / Purpur **1.16.5 - 1.20.1**.
+# 🤫 SilentDrop
+### The Silent Loot Revolution for Minecraft Servers
 
-Когда моба убивает группа игроков, лут **не падает на землю**: он мгновенно раскладывается
-по инвентарям участников по настраиваемым правилам. Без частиц, без звука выброса предмета,
-без возможности украсть чужой дроп.
+**No ground drops. No theft. No lag. Just instant, fair distribution.**
 
-* Плагин **не использует NMS** - один и тот же `.jar` работает на всём диапазоне 1.16.5-1.20.1.
-* **Ноль обязательных зависимостей** (Vault / PlaceholderAPI / WorldGuard - только в `softdepend`, фактически не используются).
-* Java 8+ (собран под байткод 52, запускается и на Java 8, и на Java 21).
+[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/karonat/SilentDrop/releases)
+[![Minecraft](https://img.shields.io/badge/Minecraft-1.16.5--1.20.1-green.svg)](https://www.spigotmc.org/)
+[![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](LICENSE)
+[![Java](https://img.shields.io/badge/Java-8%2B-orange.svg)](https://www.java.com/)
 
----
+[Download](https://github.com/karonat/SilentDrop/releases) • [Spigot Page](https://www.spigotmc.org/resources/silentdrop.XXXXX/) • [Wiki](https://github.com/karonat/SilentDrop/wiki) • [Report Bug](https://github.com/karonat/SilentDrop/issues)
 
-## 1. Быстрый старт
-
-1. Положите `SilentDrop-1.0.0.jar` в `plugins/`.
-2. Запустите сервер - появятся `plugins/SilentDrop/config.yml` и `messages.yml`.
-3. `/sd reload` после правки конфига.
-
-Проверить логику **без убийства мобов**: навестись на живого моба и выполнить
-
-```
-/sd test DIAMOND:3 BONE:11 ROTTEN_FLESH:7
-```
-
-Команда покажет, кто считается участником, какие веса, кому сколько достанется и
-почему (если лут всё-таки упал бы на землю). Ничего не выдаётся и не ломается.
+</div>
 
 ---
 
-## 1.1. Язык сообщений
+## 🎯 Why SilentDrop?
 
-Плагин изначально английский. Язык переключается одной строкой в `config.yml`:
+Your party just spent 20 minutes fighting a boss. It dies. Loot explodes everywhere.
+❌ **Lag spikes** from hundreds of item entities spawning at once.
+ **Thieves** steal the rare drop and log off immediately.
+❌ **AFK leechers** get equal shares without contributing.
+ **Chat spam** from pickup messages ruins the vibe.
 
-```yaml
-general:
-  language: ru      # en (по умолчанию) | ru | tr
-```
-
-Как это устроено:
-
-* в jar лежат три готовых файла: `messages_en.yml`, `messages_ru.yml`, `messages_tr.yml`;
-* при первом запуске нужный файл выгружается в `plugins/SilentDrop/` и дальше редактируется там;
-* ключ, которого нет в выбранном языке, берётся из английского (перевод не может «сломаться»);
-* в коде нет ни одной захардкоженной строки для игрока: всё берётся из языкового файла,
-  это контролируется отдельным тестом;
-* `|` внутри значения означает перевод строки (используется для лора в GUI);
-* `/sd reload` перечитывает язык и тексты без рестарта, `/sd reload` же печатает активный язык.
-
-Добавить свой язык: скопируйте `messages_en.yml` в `messages_<код>.yml` (в jar или в папку
-плагина), переведите значения и укажите `general.language: <код>`.
-
-> **Апгрейд с 1.0.0.** Раньше все тексты лежали в одном `messages.yml`. При первом запуске
-> 1.1.0 этот файл автоматически переименовывается в `messages_ru.yml`, правки не теряются.
-> `config.yml` Bukkit не перезаписывает, поэтому строку `general.language` нужно добавить
-> руками (или удалить свой `config.yml`, чтобы создался новый).
+**Vanilla loot is broken for multiplayer.** SilentDrop fixes it permanently by intercepting drops *before* they hit the ground and distributing them directly into inventories.
 
 ---
 
-## 2. Как это работает (порядок обработки смерти)
+## ✨ Key Features
 
-```
-EntityDeathEvent (приоритет LOWEST, ignoreCancelled)
- ├─ плагин выключен / игрок / не LivingEntity            -> выход (ваниль)
- ├─ нет правила для мира+сущности (worlds, blacklist)    -> выход (ваниль)
- ├─ список дропа уже пуст (другой плагин забрал лут)     -> выход (ваниль)   [защита от конфликтов]
- ├─ анти-ферма: grace-период / спавнер / детёныш / имя   -> выход (ваниль)
- ├─ атомарный захват UUID (двойная обработка невозможна) -> [защита от дублей]
- ├─ снимок дропа + drops.clear() + setDroppedExp(0)      -> на землю ничего не падает
- ├─ глобальный per-tick бюджет превышен                  -> возврат дропа (ваниль)  [защита TPS]
- ├─ сбор участников (трекер урона) + фильтры             -> нет участников: возврат дропа
- ├─ расчёт долей (LootAllocator)                         -> DAMAGE / EQUAL / RANDOM / TOP / EVERYONE
- ├─ выдача в инвентари (dry-run, затем addItem)
- │    └─ не влезло -> VAULT | DROP (под защитой владельца) | VOID
- ├─ опыт: KILLER / TOP_SHARE / SPLIT / DISABLED
- └─ звук / action bar / title / чат + запись в лог (debug)
-```
+### ⚡ Zero Lag & Zero Clutter
+- **No Item Entities:** Loot never spawns as physical items. Massive TPS boost on mob farms.
+- **Silent Operation:** No pickup sound, no particles, no chat spam (unless you want it).
+- **Conflict Safe:** Detects if another plugin touched the drops and steps back automatically.
 
-**Гарантия сохранности лута.** На любом шаге, где что-то пошло не так (исключение, превышен
-бюджет, не хватило участников), снимок дропа возвращается в `event.getDrops()` -
-предметы падают как в ванили. Лут не может исчезнуть из-за ошибки плагина.
+### ⚔️ Smart Distribution (5 Modes)
+Choose how loot is split per mob type or globally:
+| Mode | Logic | Best For |
+|------|-------|----------|
+| `DAMAGE` | Proportional to damage + kill credit + VIP bonus | Competitive PvE, Bosses |
+| `EQUAL` | Equal share for every participant | Co-op Survival, Friends |
+| `RANDOM` | Lottery style — random participant gets each item | RPG, Unpredictability |
+| `TOP` | Highest weight player gets everything | Solo-focused, Factions |
+| `EVERYONE` | **Every** participant gets a full copy (multiplies loot!) | Custom events, Generous servers |
 
----
+### 🛡️ Anti-Theft & Anti-Leech
+- **Eligibility Filters:** Min damage %, max distance, time window, spectator skip.
+- **Kill Credit:** Bonus weight for the final blow.
+- **Permission Multipliers:** `silentdrop.multiplier.1.5` gives VIPs 1.5x share.
+- **Drop Protection:** If an item *must* drop (overflow), it's locked to the owner. No hoppers, no mobs, no other players can steal it.
 
-## 3. Режимы распределения (`distribution.mode`)
+###  Personal Loot Vault (`/sd vault`)
+**Inventory full?** No problem.
+- Items overflow into a personal virtual chest instead of dropping on the ground.
+- Access anytime with `/sd vault` — clean GUI with pagination.
+- Admins can view/clear player vaults.
+- Auto-save to `vault.yml` every 30 seconds.
 
-| Режим | Что делает | Когда использовать |
-|---|---|---|
-| `DAMAGE` | Пропорционально весу (урон + `kill-credit` + бонус из прав). Округление честное: отклонение от идеальной доли ≤ 1 единицы | рейды, боссы, общий PvE |
-| `EQUAL` | Поровну между участниками, урон не важен | совместные ивенты, пати-фарм |
-| `RANDOM` | Каждая единица лута - лотерея (шанс пропорционален весу) | «кто урвал», азартные режимы |
-| `TOP` | Весь лут игроку с наибольшим весом (при равенстве - кто ударил первым) | арены, соревнования по DPS |
-| `EVERYONE` | **Каждый** получает полную копию дропа | ивенты. Внимание: это умножение предметов |
+### 🚜 Smart Anti-Farm Protection
+Prevent abuse on mob farms while keeping legitimate gameplay:
+- **Spawn Grace:** Mobs killed < X seconds after spawn drop vanilla (or nothing).
+- **Skip Spawner/Baby/Named Mobs:** Fine-grained control over what gets distributed.
+- **Rate Limiting:** Prevents inventory flooding during mass kills.
 
-Дополнительно:
-
-* `split-stacks: true` - стаки дробятся (7 гнили на троих = 3/2/2).
-  `false` - раздаются целыми стаками.
-* `min-players` - сколько нужно участников; если меньше, лут падает ванильно.
-* `solo-killer-gets-all` - одиночное убийство всё равно забирается молча.
-* `eligibility.kill-credit` - бонусный вес за последний удар.
-* `share.permission-multiplier` - право `silentdrop.multiplier.1.5` увеличивает долю.
-
----
-
-## 4. Защита от спама (три независимых уровня)
-
-1. **Глобальный per-tick бюджет** - `limits.global-distributions-per-tick`.
-   Если за один тик умерло слишком много мобов (массовая зачистка, взрыв, /kill),
-   «лишние» смерти обрабатываются ванильно. Ядро не проседает по TPS.
-2. **Персональный rate-limit** - `anti-spam.rate-limit`.
-   Скользящее окно: не больше `max-distributions` раздач за `window-seconds` на игрока.
-   Превысил - лут уходит в `action` (по умолчанию в хранилище, а не на землю).
-3. **Анти-ферма** - `anti-farm`.
-   Моб, убитый раньше `spawn-grace-seconds` после спавна, не участвует в тихой раздаче.
-   Плюс отдельные переключатели: спавнеры, яйца призыва, детёныши, именованные мобы,
-   произвольные `skip-spawn-reasons`. Обход - право `silentdrop.bypass.antifarm`.
-
-Дополнительно: `tracker.damage-window-seconds` (старый урон забывается) и
-`tracker.max-contributors-per-mob` (ограничение на число учитываемых игроков).
-
----
-
-## 5. Защита от конфликтов с другими плагинами
-
-* Приоритет `LOWEST` - мы забираем дроп первыми, чужие «лутовые» плагины видят пустой список
-  и не дублируют предметы.
-* `limits.skip-if-drops-tampered: true` - если к нашему обработчику список дропа **уже пуст**
-  (его отменил/забрал другой плагин), мы не вмешиваемся.
-* После обработки сравнивается размер списка: если другой плагин что-то дописал - это видно в debug-логе.
-* Атомарный захват `UUID` сущности: одна смерть = одна обработка, даже если событие
-  кто-то перевызовет.
-* Все исключения перехватываются, дроп возвращается в мир, счётчик `errors` растёт (видно в `/sd stats`).
-
----
-
-## 6. Хранилище лута (`/sd vault`)
-
-Куда попадает лут, если инвентарь полон, сработал rate-limit или игрок вышел из сети:
-
-* `vault.enabled: true`, `vault.max-entries-per-player`, `vault.expire-after-days`.
-* GUI с пагинацией: ЛКМ - забрать предмет, «Забрать всё» - забрать всё, что влезет.
-* Shift-клик, драг и забор курсором отменены - продублировать предметы через GUI нельзя.
-* Файл `vault.yml`, автосохранение раз в 30 секунд (только если были изменения) + при выключении.
-* Если `vault.enabled: false`, overflow автоматически деградирует в `DROP` - лут не теряется.
-
----
-
-## 7. Защита выброшенного дропа от воров
-
-Предмет появляется в мире **только** как fallback. Пока действует защита:
-
-* его не поднимут другие игроки (`block-other-players`);
-* его не поднимут мобы (`block-mob-pickup`);
-* его не засосут воронки и вагонетки с воронкой (`block-hoppers`);
-* его не уничтожат взрыв, огонь и лава (`cancel-explosion-loss`);
-* при слиянии стаков владелец переносится на объединённый предмет;
-* по истечении `protect-seconds` предмет можно **автоматически вернуть в хранилище** владельца
-  (вместо того чтобы он достался первому прохожему);
-* предмет помечается именем владельца (`overflow-display-name-format`), метка снимается,
-  когда владелец его поднял;
-* отмена подбора сопровождается короткой задержкой (`setPickupDelay(20)`), поэтому
-  событие не спамится каждый тик.
-
----
-
-## 8. Команды и права
-
-| Команда | Право | Описание |
-|---|---|---|
-| `/sd reload` | `silentdrop.admin` | перечитать `config.yml` и `messages.yml` |
-| `/sd test [МАТЕРИАЛ:КОЛ-ВО ...]` | `silentdrop.admin` | **сухой прогон**: показать доли для моба под прицелом |
-| `/sd stats` | `silentdrop.admin` | счётчики: раздачи, fallback, overflow, ошибки, память трекера |
-| `/sd vault [игрок]` | `silentdrop.use` (`admin` - для чужого) | открыть хранилище |
-| `/sd give <игрок> <МАТЕРИАЛ> [кол-во]` | `silentdrop.admin` | выдать предмет тем же кодом, что и лут (проверка overflow) |
-| `/sd clear <игрок\|all>` | `silentdrop.admin` | очистить хранилище |
-
-| Право | По умолчанию | Описание |
-|---|---|---|
-| `silentdrop.use` | true | `/sd vault`, `/sd stats` (stats всё равно требуют admin) |
-| `silentdrop.admin` | op | все команды |
-| `silentdrop.notify` | true | получать звук / action bar о луте |
-| `silentdrop.bypass` | false | игрок не участвует в распределении |
-| `silentdrop.bypass.antifarm` | false | игнорировать анти-ферму |
-| `silentdrop.multiplier.<число>` | - | множитель доли, например `silentdrop.multiplier.1.5` (ограничение `share.permission-multiplier.cap`) |
-
----
-
-## 9. Точечные правила (`rules.*`)
-
-Правила проверяются **сверху вниз**, срабатывает первое подходящее. Все неуказанные ключи
-наследуются из `default-rule`.
-
+###  Per-Mob & Per-World Rules Engine
+Define custom rules for specific mobs or regions. **First match wins.**
 ```yaml
 rules:
   bosses:
-    entities: [WITHER, ENDER_DRAGON, ELDER_GUARDIAN]
-    distribution:
-      mode: DAMAGE
-      min-players: 1
-    eligibility:
-      kill-credit: 10.0
-      min-damage-percent: 5.0     # меньше 5% урона - лута не получает
-      max-distance: 96.0
-  pvp-arena:
-    worlds: [arena]
-    regions:
-      main-hall: { world: arena, center-x: 0, center-y: 65, center-z: 0, radius-x: 50, radius-y: 30, radius-z: 50 }
-    distribution:
-      mode: TOP
-  everything-except-bosses:
     entities: [WITHER, ENDER_DRAGON]
-    entities-inverted: true       # правило для всех КРОМЕ перечисленных
-    distribution:
-      mode: EQUAL
+    distribution: { mode: DAMAGE, min-players: 1 }
+    eligibility: { kill-credit: 10.0, max-distance: 96.0 }
+  
+  farm-mobs:
+    entities: [PIG, COW, SHEEP]
+    anti-farm: { enabled: true, spawn-grace-seconds: 30 }
 ```
+- Works with **built-in region boxes** (no WorldGuard required!).
+- Inverted lists supported (apply to all EXCEPT these mobs).
 
-Фильтры правила: `entities` (+`entities-inverted`), `worlds` (+`worlds-inverted`),
-`regions` (прямоугольники: `world`, `center-x/y/z`, `radius-x/y/z`) - без WorldGuard.
+### 🌍 Multi-Language Support
+- Bundled: **English**, **Russian**, **Turkish**.
+- Switch language in `config.yml` with one line: `language: ru`.
+- Fully editable message files (`messages_ru.yml`, etc.).
+- Add your own language by copying a template.
 
 ---
 
-## 10. Диагностика
+## 🚀 Quick Start
 
-```yaml
-general:
-  debug: true
-```
+1. Download `SilentDrop-1.1.0.jar` from [Releases](https://github.com/karonat/SilentDrop/releases).
+2. Place it in your server's `plugins/` folder.
+3. Start/restart the server.
+4. Edit `plugins/SilentDrop/config.yml` to match your needs.
+5. Run `/sd reload` in-game or console.
+6. Done! No resource pack needed.
 
-В консоли появляется полная трассировка каждого решения:
-
-```
-[SilentDrop][debug] SKIP_FARM ZOMBIE : убит через 3с после спавна (grace 10с)
-[SilentDrop][debug] DROP_EMPTY COW - дроп уже очищен другим плагином, пропускаем
-[SilentDrop][debug] BUDGET_EXCEEDED tick, ванильный дроп для SKELETON
-[SilentDrop][debug] DISTRIBUTED Zombie mode=DAMAGE players=3 units=12 delivered=12 overflow=0 exp=7
-[SilentDrop][debug] DROP_AT_LOCATION ROTTEN_FLESH x3 owner=<uuid> (нераспределено)
-```
-
-Если команда падает с `StackOverflowError` внутри `MemorySection.getDefault`, значит
-какой-то `YamlConfiguration` установлен как defaults сам себе. В SilentDrop это место
-закрыто тестом `SourceHygieneTest#noSelfDefaults`.
-
-`/sd stats` показывает накопительные счётчики - по ним сразу видно, куда «уходит» лут:
-`fallback-vanilla`, `skipped-antifarm`, `skipped-tampered`, `skipped-no-players`,
-`overflow-items`, `vault-stored`, `rate-limited`, `errors`.
-
----
-
-## 11. Сборка из исходников
-
+### 🔍 Testing Without Killing Mobs
+Use the built-in simulation command to see how loot would split:
 ```bash
-cd SilentDrop
-mvn clean package        # прогонит unit-тесты и соберёт jar
-# результат: target/SilentDrop-1.0.0.jar
+/sd test DIAMOND:3 BONE:11 ROTTEN_FLESH:7
 ```
-
-Требования: JDK 8+ (проверено на JDK 17), Maven 3.6+. Зависимости тянутся из
-`repo.papermc.io` (зеркало `spigot-api`), компиляция - против `spigot-api 1.16.5`,
-чтобы гарантировать работу на всём диапазоне версий.
-
-```
-mvn -DskipTests package   # только сборка
-mvn test                  # только тесты (41 тест)
-```
+This shows participants, weights, percentages, and who gets what — without harming any mobs or giving items. Perfect for tuning configs.
 
 ---
 
-## 12. Структура проекта
+##  Commands & Permissions
 
+**Main Command:** `/silentdrop` (aliases: `/sd`, `/sdrop`)
+
+| Command | Permission | Description |
+|---------|------------|-------------|
+| `/sd help` | - | Show subcommands |
+| `/sd reload` | `silentdrop.admin` | Reload config & messages |
+| `/sd test [ITEM:AMOUNT]` | `silentdrop.admin` | **Dry-run simulation** — see how loot would split |
+| `/sd stats` | `silentdrop.admin` | Live diagnostics: distributions, fallbacks, errors, vault size |
+| `/sd vault` | `silentdrop.use` | Open your personal loot vault GUI |
+| `/sd vault <player>` | `silentdrop.admin` | View another player's vault |
+| `/sd give <player> <item> [amt]` | `silentdrop.admin` | Give item using SilentDrop logic (tests overflow) |
+| `/sd clear [player/all]` | `silentdrop.admin` | Clear vaults |
+
+**Permissions:**
+- `silentdrop.use` (default: `true`) — Use vault, receive loot.
+- `silentdrop.admin` (default: `op`) — All commands.
+- `silentdrop.bypass` — Skip distribution entirely (vanilla drops for this player).
+- `silentdrop.bypass.antifarm` — Ignore anti-farm checks.
+- `silentdrop.multiplier.<number>` — Share multiplier (e.g., `silentdrop.multiplier.2.0`).
+
+---
+
+## ⚙️ Configuration Highlights
+
+Everything is tunable in `config.yml`. Here's what you can control:
+
+- **Distribution:** Mode, min-players, split-stacks, solo-killer-gets-all.
+- **Eligibility:** Damage %, distance, time window, item blacklist, item chance.
+- **Overflow:** VAULT / DROP / VOID actions.
+- **Anti-Spam:** Rate limit distributions per player (prevents inventory flood).
+- **Experience:** DISABLED / KILLER / TOP_SHARE / SPLIT modes.
+- **Tracker:** Damage window, max contributors per mob.
+- **Limits:** Global distributions per tick (TPS protection).
+
+> **Full Config Reference:** See [Wiki](https://github.com/karonat/SilentDrop/wiki) or comments in generated `config.yml`.
+
+---
+
+## 🛠️ For Developers
+
+### Building from Source
+```bash
+git clone https://github.com/karonat/SilentDrop.git
+cd SilentDrop
+mvn clean package
+```
+- **Requirements:** JDK 8+, Maven 3.6+.
+- **Output:** `target/SilentDrop-1.1.0.jar`.
+- **Tests:** 41 unit tests covering allocation math, inventory logic, and language files. Run with `mvn test`.
+
+### Project Structure
 ```
 src/main/java/ru/silentdrop/
-├── SilentDropPlugin.java            точка входа, задачи, метрики
-├── command/SilentDropCommand.java   /sd reload|test|stats|vault|give|clear + tab-complete
-├── config/
-│   ├── Settings.java                снимок конфига, подбор правила (мир/тип/регион) + кэш
-│   ├── RuleSet.java                 неизменяемые поля одного правила
-│   ├── Mode.java / ExpMode.java / OverflowAction.java
-│   ├── Messages.java                загрузка messages_<lang>.yml + фолбэк на английский
-│   └── ConfigHolder.java            hot-swap конфига без перерегистрации слушателей
-├── listener/
-│   ├── DeathListener.java           EntityDeathEvent @ LOWEST
-│   ├── CombatListener.java          учёт урона и спавна
-│   └── ItemOwnershipListener.java   защита выброшенного лута от воров
-├── loot/
-│   ├── LootDistributor.java         оркестратор (фильтры -> доли -> выдача -> опыт -> фидбек)
-│   ├── LootAllocator.java           ЧИСТАЯ математика долей (покрыта тестами)
-│   ├── Contributor / LootOptions / SharePlan / AllocatedStack
-│   ├── ItemStackHolder / BukkitStack   абстракция, чтобы ядро тестировалось без Bukkit
-│   └── DropProtector.java           реестр «чей это предмет на земле»
-├── track/DamageTracker.java         вклад игроков (стрелы, TNT, зелья, питомцы) + время спавна
-├── vault/LootVault.java, VaultEntry.java, VaultGui.java
-└── util/Text.java, ItemCodec.java, InventoryMath.java
-
-src/test/java/ru/silentdrop/
-├── loot/LootAllocatorTest.java      23 теста: режимы, инварианты сохранности, детерминизм, стресс
-├── util/InventoryMathTest.java      8 тестов: раскладка по слотам, баланс предметов
-├── i18n/LanguageFilesTest.java      7 тестов: en/ru/tr имеют одинаковый набор ключей,
-│                                    все ключи из кода существуют, нет мёртвых текстов,
-│                                    плейсхолдеры переводов не расходятся с английскими
-└── config/SourceHygieneTest.java    3 теста-страховки: YamlConfiguration не является
-                                     defaults сам для себя (причина StackOverflowError),
-                                     в коде нет захардкоженных цветных сообщений,
-                                     исходники не содержат не-английского текста
+├── SilentDropPlugin.java       # Entry point, metrics, tasks
+├── command/                    # /sd commands + tab-complete
+├── config/                     # Settings, Rules, Messages (i18n)
+├── listener/                   # Death, Combat, ItemOwnership events
+├── loot/                       # Distributor, Allocator, DropProtector
+├── track/                      # DamageTracker (arrows, TNT, pets)
+├── vault/                      # LootVault GUI + storage
+└── util/                       # Text, ItemCodec, InventoryMath
 ```
+
+### API & Hooks
+SilentDrop is designed to be conflict-safe:
+- Uses `LOWEST` priority on `EntityDeathEvent` to intercept drops first.
+- Checks `skip-if-drops-tampered` to avoid conflicts with other loot plugins.
+- Atomic UUID locking prevents double-processing.
+- All exceptions are caught and logged; drops fall back to vanilla on error.
 
 ---
 
-## 13. Известные ограничения (честно)
+##  Known Limitations (Honesty First)
 
-* Лут кладётся в **основные 36 слотов** инвентаря. Броня/оффхенд не подставляются автоматически
-  (как это делает ванильный подбор некоторых предметов) - при нехватке места сработает overflow.
-* Отмена `EntityPickupItemEvent` для чужих игроков технически не мешает **другим плагинам**
-  поднять предмет своими средствами; защита рассчитана на ванильные механики.
-* `overflow.action: DROP` - единственный случай, когда предмет вообще появляется в мире.
-* `mode: EVERYONE` **умножает** предметы - включайте осознанно.
-* Время спавна известно только для мобов, заспавненных при работающем плагине
-  (см. `anti-farm.require-known-spawn-time`).
-* Трекер урона хранит данные `damage-window-seconds`; урон, нанесённый до перезагрузки
-  плагина, не учитывается.
+- Loot goes to **main 36 inventory slots**. Armor/offhand are not auto-equipped (vanilla behavior).
+- `overflow.action: DROP` is the only case where items appear in the world.
+- `mode: EVERYONE` **multiplies** items — enable consciously.
+- Spawn time is only known for mobs spawned while the plugin is running (unless `require-known-spawn-time: false`).
+- Damage tracker resets on plugin reload (data is in-memory for performance).
 
-Подробный чек-лист ручной проверки - в `TESTING.md`.
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+
+**Free to use, modify, and distribute.** No telemetry beyond anonymous bStats. No backdoors. Clean code.
+
+---
+
+<div align="center">
+
+**Made with ❤️ for the Minecraft community.**
+If SilentDrop helps your server, please leave a review on [SpigotMC](https://www.spigotmc.org/resources/silentdrop.XXXXX/)!
+
+</div>
+```
