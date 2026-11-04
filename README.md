@@ -196,7 +196,7 @@ SilentDrop is designed to be conflict-safe:
 
 ## 📜 License
 
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE.txt) file for details.
 
 **Free to use, modify, and distribute.** No telemetry beyond anonymous bStats. No backdoors. Clean code.
 
@@ -205,6 +205,6 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 <div align="center">
 
 **Made with ❤️ for the Minecraft community.**
-If SilentDrop helps your server, please leave a review on [SpigotMC](https://github.com/karonat1/SilentDrop/blob/main/LICENSE.txt/)!
+If SilentDrop helps your server, please leave a review on [SpigotMC](https://www.spigotmc.org/resources/silentdrop.XXXXX/)!
 
 </div>
