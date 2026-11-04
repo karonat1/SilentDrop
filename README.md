@@ -18,10 +18,14 @@
 
 ## Why SilentDrop?
 
-Your party just spent 20 minutes fighting a boss. It dies. Loot explodes everywhere.\n
-❌ **Lag spikes** from hundreds of item entities spawning at once.\n
- **Thieves** steal the rare drop and log off immediately.\n
-❌ **AFK leechers** get equal shares without contributing.\n
+Your party just spent 20 minutes fighting a boss. It dies. Loot explodes everywhere.
+
+❌ **Lag spikes** from hundreds of item entities spawning at once.
+
+ **Thieves** steal the rare drop and log off immediately.
+
+❌ **AFK leechers** get equal shares without contributing.
+
  **Chat spam** from pickup messages ruins the vibe.
 
 **Vanilla loot is broken for multiplayer.** SilentDrop fixes it permanently by intercepting drops *before* they hit the ground and distributing them directly into inventories.
