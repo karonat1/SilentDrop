@@ -10,7 +10,7 @@
 [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](LICENSE.txt)
 [![Java](https://img.shields.io/badge/Java-8%2B-orange.svg)](https://www.java.com/)
 
-[Download](https://github.com/karonat/SilentDrop/releases) • [Spigot Page](https://www.spigotmc.org/resources/silentdrop.XXXXX/) • [Release](https://github.com/karonat1/SilentDrop/releases/tag/release)
+[Download](https://github.com/karonat1/SilentDrop/releases/tag/release) • [Spigot Page](https://www.spigotmc.org/resources/silentdrop.XXXXX/) • [Release](https://github.com/karonat1/SilentDrop/releases/tag/release)
 
 </div>
 
@@ -94,7 +94,7 @@ rules:
 
 ## 🚀 Quick Start
 
-1. Download `SilentDrop-1.1.0.jar` from [Releases](https://github.com/karonat/SilentDrop/releases).
+1. Download `SilentDrop-1.1.0.jar` from [Releases](https://github.com/karonat1/SilentDrop/releases/tag/release).
 2. Place it in your server's `plugins/` folder.
 3. Start/restart the server.
 4. Edit `plugins/SilentDrop/config.yml` to match your needs.
@@ -146,7 +146,7 @@ Everything is tunable in `config.yml`. Here's what you can control:
 - **Tracker:** Damage window, max contributors per mob.
 - **Limits:** Global distributions per tick (TPS protection).
 
-> **Full Config Reference:** See [Wiki](https://github.com/karonat/SilentDrop/wiki) or comments in generated `config.yml`.
+> **Full Config Reference: See comments in generated config.yml.
 
 ---
 
