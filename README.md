@@ -10,7 +10,7 @@
 [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](LICENSE)
 [![Java](https://img.shields.io/badge/Java-8%2B-orange.svg)](https://www.java.com/)
 
-[Download](https://github.com/karonat/SilentDrop/releases) • [Spigot Page](https://www.spigotmc.org/resources/silentdrop.XXXXX/)
+[Download](https://github.com/karonat/SilentDrop/releases) • [Spigot Page](https://www.spigotmc.org/resources/silentdrop.XXXXX/) • [Release](https://github.com/karonat1/SilentDrop/releases/tag/release)
 
 </div>
 
@@ -208,4 +208,3 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 If SilentDrop helps your server, please leave a review on [SpigotMC](https://www.spigotmc.org/resources/silentdrop.XXXXX/)!
 
 </div>
-```
