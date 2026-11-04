@@ -1,0 +1,96 @@
+# ============================================================================
+#  SilentDrop - English messages (default language)
+#
+#  general.language: en | ru | tr  (config.yml)
+#  Any key missing in the active language file is taken from this one.
+#  Empty value ("") disables the message.
+#
+#  Color codes: &a &7 &e ... and &#RRGGBB (1.16+)
+#
+#  Placeholders:
+#    %player%  - receiver nickname
+#    %mob%     - mob name (custom name or "Zombie")
+#    %count%   - loot units / entries
+#    %stacks%  - number of stacks
+#    %owner%   - owner of a protected dropped item
+#    %left%    - entries that stayed in the vault
+#    %time%    - when the vault entry was stored
+#    %reason%  - why the item went to the vault
+#    %ms%, %rules%, %key%, %value%, %item%, %material%, %page%, %pages%, %max%
+# ============================================================================
+
+prefix: "&8[&bSilentDrop&8]&r "
+
+no-permission: "&cYou do not have permission."
+players-only: "&cThis command is for players only."
+usage: "&7/silentdrop &f<&areload&f|&atest&f|&astats&f|&avault&f|&agive&f|&aclear&f>"
+
+reload-ok: "&aConfig reloaded in &e%ms% &ams. Distribution rules: &e%rules%&a. Language: &e%language%&a."
+
+loot:
+  action-bar: "&a+%count% &7loot &8(%mob%)"
+  chat: "&7Received &a%count% &7item(s) from &e%mob%"
+  title: "&a+%count%"
+  subtitle: "&7%mob%"
+
+vault:
+  gui-title: "&0Loot vault (%page%/%pages%)"
+  stored: "&e%count% &7item(s) moved to your vault. Use &f/sd vault"
+  empty: "&7Your vault is empty."
+  disabled: "&cThe vault is disabled in config.yml."
+  player-offline: "&cPlayer is offline: &e%player%&c. The vault is only available online."
+  take-all: "&aTake all"
+  taken: "&aEntries taken: &e%count%"
+  partial: "&eTaken: %count%, left in the vault: %left% (no room in the inventory)."
+  lore: "&8Stored: %time% &8| Source: %mob% &8| Reason: %reason%"
+  next: "&aNext page &7>"
+  prev: "&7< &aPrevious page"
+  broken-entry: "&cCorrupted entry"
+  broken-entry-lore: "&7This item could not be read.&7Click to delete the entry."
+  take-hint: "&aLMB &7- take"
+  separator: "&8-------------"
+  info-title: "&6Loot vault"
+  info-lore: "&7Entries: &e%count%&7/&e%max%|&7Loot that did not fit|&7into the inventory ends up here."
+  take-all-lore: "&7Take everything that fits|&7into your inventory."
+
+protection:
+  denied-pickup: "&cThis is somebody else's loot (&e%owner%&c)."
+  denied-hopper: "&cProtected loot cannot be collected by hoppers."
+
+test:
+  no-entity: "&cLook at a living entity (range: 24 blocks)."
+  no-rule: "&cNo rule matches &e%mob%&c - the loot would stay vanilla."
+  sample-hint: "&7(no sample loot given - using 3x ROTTEN_FLESH, 1x GOLD_NUGGET)"
+  header: "&8&m-------------&r &bSilentDrop TEST &8&m-------------&r"
+  mob: "&7Mob: &e%mob% &7(&e%type%&7)"
+  location: "&7World: &e%world% &7XYZ: &e%x% %y% %z%"
+  rule-line: "&7Mode: &e%mode% &7| min-players: &e%min% &7| split-stacks: &e%split% &7| kill-credit: &e%credit%"
+  rule-line-2: "&7Anti-farm: &e%antifarm% &7| overflow: &e%overflow% &7| rate-limit: &e%ratelimit%"
+  antifarm-blocked: "&cAnti-farm would block this drop: &e%reason%"
+  summary: "&7Participants: &e%players% &7| loot units: &e%units% &7| total weight: &e%weight%"
+  player-line: "&e%player% &7dmg &f%damage% &7weight &f%weight% &7(&f%percent%%percent_sign%&7)%killer%%mult%"
+  player-share: "   &8-> &7(%units% units) %items%"
+  nothing: "&8nothing"
+  killer-tag: " &c[killer]"
+  mult-tag: " &b[x%mult%]"
+  note: "&6! &7%text%"
+  result-vanilla: "&cResult: &7the loot would drop on the ground (vanilla behavior)."
+  result-silent: "&aResult: &7the loot goes straight into inventories, nothing hits the ground."
+  footer: "&8&m--------------------------------------&r"
+
+stats:
+  header: "&7--- &bSilentDrop &7stats ---"
+  line: "&7%key%: &e%value%"
+
+give:
+  usage: "&7/sd give <player> <MATERIAL> [amount]"
+  ok: "&aGiven &e%count% x %item% &ato &e%player%"
+  bad-material: "&cUnknown material: &e%material%"
+  player-offline: "&cPlayer not found: &e%player%"
+
+clear:
+  usage: "&7/sd clear <player|all>"
+  ok: "&aVault of &e%player% &acleared (entries: &e%count%&a)."
+
+debug:
+  header: "&7[SD DEBUG] %text%"

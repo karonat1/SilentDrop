@@ -1,0 +1,34 @@
+name: SilentDrop
+version: '${project.version}'
+main: ru.silentdrop.SilentDropPlugin
+api-version: '1.16'
+author: SilentDrop
+description: Instantly distributes mob loot into the inventories of everyone who took part in the kill.
+load: POSTWORLD
+# No NMS, no version-specific code: one jar for Spigot/Paper/Purpur 1.16.5 - 1.20.1.
+softdepend: [Vault, PlaceholderAPI, WorldGuard]
+
+commands:
+  silentdrop:
+    description: SilentDrop management
+    usage: /silentdrop <reload|test|stats|vault|give|clear>
+    aliases: [sd, sdrop]
+
+permissions:
+  silentdrop.use:
+    description: Access to /sd vault
+    default: true
+  silentdrop.admin:
+    description: Full access to every SilentDrop command
+    default: op
+    children:
+      silentdrop.use: true
+  silentdrop.bypass:
+    description: Player with this permission takes no part in loot distribution
+    default: false
+  silentdrop.bypass.antifarm:
+    description: Ignore anti-farm checks (grace period, spawners, babies) for this player
+    default: false
+  silentdrop.notify:
+    description: Receive sound / action bar notifications about received loot
+    default: true

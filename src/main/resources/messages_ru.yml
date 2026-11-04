@@ -1,0 +1,91 @@
+# ============================================================================
+#  SilentDrop - Russian messages
+#
+#  Включается через general.language: ru в config.yml.
+#  Ключи, которых здесь нет, берутся из messages_en.yml.
+#  Пустое значение ("") отключает сообщение.
+#
+#  Цвет: &a &7 &e ... и &#RRGGBB (1.16+)
+#
+#  Плейсхолдеры:
+#    %player% - ник получателя, %mob% - имя моба, %count% - количество,
+#    %stacks% - стаков, %owner% - владелец защищённого предмета,
+#    %left% - осталось в хранилище, %time% - время записи, %reason% - причина,
+#    %ms%, %rules%, %key%, %value%, %item%, %material%, %page%, %pages%, %max%
+# ============================================================================
+
+prefix: "&8[&bSilentDrop&8]&r "
+
+no-permission: "&cНедостаточно прав."
+players-only: "&cКоманда доступна только игрокам."
+usage: "&7/silentdrop &f<&areload&f|&atest&f|&astats&f|&avault&f|&agive&f|&aclear&f>"
+
+reload-ok: "&aКонфигурация перезагружена за &e%ms% &aмс. Правил: &e%rules%&a. Язык: &e%language%&a."
+
+loot:
+  action-bar: "&a+%count% &7лута &8(%mob%)"
+  chat: "&7Получено &a%count% &7предмет(ов) с &e%mob%"
+  title: "&a+%count%"
+  subtitle: "&7%mob%"
+
+vault:
+  gui-title: "&0Хранилище лута (%page%/%pages%)"
+  stored: "&7В хранилище добавлено предметов: &e%count%&7. Забери: &f/sd vault"
+  empty: "&7В хранилище пусто."
+  disabled: "&cХранилище отключено в config.yml."
+  player-offline: "&cИгрок не в сети: &e%player%&c. Хранилище доступно только онлайн."
+  take-all: "&aЗабрать всё"
+  taken: "&aПолучено записей: &e%count%"
+  partial: "&eЗабрано записей: %count%, осталось в хранилище: %left% (не влезло в инвентарь)."
+  lore: "&8Сохранено: %time% &8| Источник: %mob% &8| Причина: %reason%"
+  next: "&aСледующая страница &7>"
+  prev: "&7< &aПредыдущая страница"
+  broken-entry: "&cПовреждённая запись"
+  broken-entry-lore: "&7Предмет не удалось прочитать.|&7Кликните, чтобы удалить запись."
+  take-hint: "&aЛКМ &7- забрать"
+  separator: "&8-------------"
+  info-title: "&6Хранилище лута"
+  info-lore: "&7Записей: &e%count%&7/&e%max%|&7Сюда попадает лут, который|&7не влез в инвентарь."
+  take-all-lore: "&7Забрать всё, что поместится|&7в инвентарь."
+
+protection:
+  denied-pickup: "&cЭто чужой лут (&e%owner%&c)."
+  denied-hopper: "&cЗащищённый лут нельзя забрать воронкой."
+
+test:
+  no-entity: "&cНаведи прицел на живую сущность (радиус 24 блока)."
+  no-rule: "&cДля &e%mob% &cнет подходящего правила, лут остался бы ванильным."
+  sample-hint: "&7(образец дропа не задан, взят пример: 3x ROTTEN_FLESH, 1x GOLD_NUGGET)"
+  header: "&8&m-------------&r &bSilentDrop TEST &8&m-------------&r"
+  mob: "&7Моб: &e%mob% &7(&e%type%&7)"
+  location: "&7Мир: &e%world% &7XYZ: &e%x% %y% %z%"
+  rule-line: "&7Режим: &e%mode% &7| min-players: &e%min% &7| split-stacks: &e%split% &7| kill-credit: &e%credit%"
+  rule-line-2: "&7Анти-ферма: &e%antifarm% &7| overflow: &e%overflow% &7| rate-limit: &e%ratelimit%"
+  antifarm-blocked: "&cАнти-ферма заблокировала бы раздачу: &e%reason%"
+  summary: "&7Участников: &e%players% &7| единиц лута: &e%units% &7| суммарный вес: &e%weight%"
+  player-line: "&e%player% &7урон &f%damage% &7вес &f%weight% &7(&f%percent%%percent_sign%&7)%killer%%mult%"
+  player-share: "   &8-> &7(%units% ед.) %items%"
+  nothing: "&8ничего"
+  killer-tag: " &c[убийца]"
+  mult-tag: " &b[x%mult%]"
+  note: "&6! &7%text%"
+  result-vanilla: "&cИтог: &7лут упал бы на землю (ванильное поведение)."
+  result-silent: "&aИтог: &7лут ушёл бы в инвентари, на землю ничего не падает."
+  footer: "&8&m--------------------------------------&r"
+
+stats:
+  header: "&7--- &bSilentDrop &7статистика ---"
+  line: "&7%key%: &e%value%"
+
+give:
+  usage: "&7/sd give <игрок> <МАТЕРИАЛ> [кол-во]"
+  ok: "&aВыдано &e%count% x %item% &aигроку &e%player%"
+  bad-material: "&cНеизвестный материал: &e%material%"
+  player-offline: "&cИгрок не найден: &e%player%"
+
+clear:
+  usage: "&7/sd clear <игрок|all>"
+  ok: "&aХранилище &e%player% &aочищено (записей: &e%count%&a)."
+
+debug:
+  header: "&7[SD DEBUG] %text%"

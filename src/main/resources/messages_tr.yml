@@ -1,0 +1,91 @@
+# ============================================================================
+#  SilentDrop - Türkçe mesajlar
+#
+#  config.yml içinde general.language: tr ile etkinleştirilir.
+#  Burada olmayan anahtarlar messages_en.yml dosyasından alınır.
+#  Boş değer ("") mesajı kapatır.
+#
+#  Renk: &a &7 &e ... ve &#RRGGBB (1.16+)
+#
+#  Yer tutucular:
+#    %player% - oyuncu adı, %mob% - yaratık adı, %count% - adet,
+#    %stacks% - yığın sayısı, %owner% - korunan eşyanın sahibi,
+#    %left% - kasada kalan, %time% - kayıt zamanı, %reason% - sebep,
+#    %ms%, %rules%, %key%, %value%, %item%, %material%, %page%, %pages%, %max%
+# ============================================================================
+
+prefix: "&8[&bSilentDrop&8]&r "
+
+no-permission: "&cBunun için yetkin yok."
+players-only: "&cBu komut yalnızca oyuncular içindir."
+usage: "&7/silentdrop &f<&areload&f|&atest&f|&astats&f|&avault&f|&agive&f|&aclear&f>"
+
+reload-ok: "&aYapılandırma &e%ms% &amsn içinde yeniden yüklendi. Kural sayısı: &e%rules%&a. Dil: &e%language%&a."
+
+loot:
+  action-bar: "&a+%count% &7ganimet &8(%mob%)"
+  chat: "&e%mob% &7kaynağından &a%count% &7eşya aldın"
+  title: "&a+%count%"
+  subtitle: "&7%mob%"
+
+vault:
+  gui-title: "&0Ganimet kasası (%page%/%pages%)"
+  stored: "&e%count% &7eşya kasana taşındı. Kullan: &f/sd vault"
+  empty: "&7Kasan boş."
+  disabled: "&cKasa config.yml içinde devre dışı."
+  player-offline: "&cOyuncu çevrimdışı: &e%player%&c. Kasa yalnızca çevrimiçiyken kullanılabilir."
+  take-all: "&aHepsini al"
+  taken: "&aAlınan kayıt: &e%count%"
+  partial: "&eAlınan: %count%, kasada kalan: %left% (envanterde yer yok)."
+  lore: "&8Kayıt: %time% &8| Kaynak: %mob% &8| Sebep: %reason%"
+  next: "&aSonraki sayfa &7>"
+  prev: "&7< &aÖnceki sayfa"
+  broken-entry: "&cBozuk kayıt"
+  broken-entry-lore: "&7Bu eşya okunamadı.|&7Kaydı silmek için tıkla."
+  take-hint: "&aSol tık &7- al"
+  separator: "&8-------------"
+  info-title: "&6Ganimet kasası"
+  info-lore: "&7Kayıt: &e%count%&7/&e%max%|&7Envantere sığmayan ganimet|&7buraya taşınır."
+  take-all-lore: "&7Envantere sığan her şeyi al."
+
+protection:
+  denied-pickup: "&cBu başkasının ganimeti (&e%owner%&c)."
+  denied-hopper: "&cKorumalı ganimet huni ile alınamaz."
+
+test:
+  no-entity: "&cCanlı bir varlığa bak (menzil: 24 blok)."
+  no-rule: "&e%mob% &ciçin uygun kural yok, ganimet vanilla kalırdı."
+  sample-hint: "&7(örnek ganimet verilmedi, kullanılan: 3x ROTTEN_FLESH, 1x GOLD_NUGGET)"
+  header: "&8&m-------------&r &bSilentDrop TEST &8&m-------------&r"
+  mob: "&7Yaratık: &e%mob% &7(&e%type%&7)"
+  location: "&7Dünya: &e%world% &7XYZ: &e%x% %y% %z%"
+  rule-line: "&7Mod: &e%mode% &7| min-players: &e%min% &7| split-stacks: &e%split% &7| kill-credit: &e%credit%"
+  rule-line-2: "&7Anti-farm: &e%antifarm% &7| overflow: &e%overflow% &7| rate-limit: &e%ratelimit%"
+  antifarm-blocked: "&cAnti-farm bu dağıtımı engellerdi: &e%reason%"
+  summary: "&7Katılımcı: &e%players% &7| ganimet birimi: &e%units% &7| toplam ağırlık: &e%weight%"
+  player-line: "&e%player% &7hasar &f%damage% &7ağırlık &f%weight% &7(&f%percent%%percent_sign%&7)%killer%%mult%"
+  player-share: "   &8-> &7(%units% birim) %items%"
+  nothing: "&8hiçbir şey"
+  killer-tag: " &c[öldüren]"
+  mult-tag: " &b[x%mult%]"
+  note: "&6! &7%text%"
+  result-vanilla: "&cSonuç: &7ganimet yere düşerdi (vanilla davranış)."
+  result-silent: "&aSonuç: &7ganimet doğrudan envanterlere gider, yere hiçbir şey düşmez."
+  footer: "&8&m--------------------------------------&r"
+
+stats:
+  header: "&7--- &bSilentDrop &7istatistikleri ---"
+  line: "&7%key%: &e%value%"
+
+give:
+  usage: "&7/sd give <oyuncu> <MALZEME> [adet]"
+  ok: "&e%player% &aoyuncusuna &e%count% x %item% &averildi"
+  bad-material: "&cBilinmeyen malzeme: &e%material%"
+  player-offline: "&cOyuncu bulunamadı: &e%player%"
+
+clear:
+  usage: "&7/sd clear <oyuncu|all>"
+  ok: "&e%player% &akasası temizlendi (kayıt: &e%count%&a)."
+
+debug:
+  header: "&7[SD DEBUG] %text%"

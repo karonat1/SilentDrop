@@ -1,0 +1,279 @@
+# ============================================================================
+#  SilentDrop - smart loot system with anti-spam and conflict protection
+#  Spigot / Paper / Purpur 1.16.5 - 1.20.1 (no NMS)
+#
+#  Idea: when a mob is killed by a group, the loot does NOT hit the ground.
+#  It is instantly distributed into the inventories of the participants
+#  according to configurable rules. No particles, no drop sound, no thieves.
+#
+#  Every rule in the "rules" section inherits ALL keys from "default-rule"
+#  and overrides only the ones it declares.
+# ============================================================================
+
+general:
+  # false = the plugin does not touch drops at all.
+  enabled: true
+
+  # Message language. Bundled files: en (default), ru, tr.
+  # Stored as plugins/SilentDrop/messages_<language>.yml, fully editable.
+  # Keys missing in the chosen language fall back to English.
+  language: en
+
+  # Logs every decision to the console. Turn it on while testing the logic.
+  debug: false
+
+  # Anonymous usage metrics (bStats). Affects nothing.
+  bstats: true
+
+  prefix: "&8[&bSilentDrop&8]&r "
+
+# ---------------------------------------------------------------------------
+# Worlds. mode: blacklist = the list contains forbidden worlds;
+#         mode: whitelist = the list contains the only allowed worlds.
+# ---------------------------------------------------------------------------
+worlds:
+  mode: blacklist
+  list:
+    - "world_the_end_disabled_example"
+
+# ---------------------------------------------------------------------------
+# Entity types that are never processed (vanilla drop).
+# Names are EntityType constants (case insensitive), the "minecraft:" prefix is allowed.
+# ---------------------------------------------------------------------------
+blacklist:
+  entities:
+    - ARMOR_STAND
+    - ITEM_FRAME
+    - PAINTING
+    - LEASH_HITCH
+    - ENDER_CRYSTAL
+
+# ---------------------------------------------------------------------------
+# Default rule set
+# ---------------------------------------------------------------------------
+default-rule:
+
+  distribution:
+    # How items are divided:
+    #   DAMAGE   - proportional to weight (damage + kill-credit + permission bonus)  [default]
+    #   EQUAL    - equal share for every participant, damage is ignored
+    #   RANDOM   - every item goes to a random participant (lottery)
+    #   TOP      - everything goes to the participant with the highest weight
+    #   EVERYONE - EVERY participant gets a full copy of the drop (multiplies items!)
+    mode: DAMAGE
+
+    # How many participants are required. Below this number the loot drops vanilla.
+    min-players: 2
+
+    # A solo kill is still collected silently even when min-players is higher.
+    solo-killer-gets-all: true
+
+    # true: split stacks (7 rotten flesh for 3 players = 3/2/2).
+    # false: hand out whole stacks only.
+    split-stacks: true
+
+  eligibility:
+    # Count the killer (last hit).
+    include-killer: true
+    # Count everyone who dealt damage (recorded by the tracker).
+    include-damagers: true
+    # Count a player who ended up in the list without dealing damage.
+    include-assist-without-damage: false
+    # Maximum distance from the death point to the player, in blocks. 0 = unlimited.
+    max-distance: 48.0
+    # The player must be in the same world.
+    require-same-world: true
+    # Ignore players in spectator mode.
+    skip-spectator: true
+    # Minimal damage share in percent. 0 = disabled.
+    # Example: 10 means a player who dealt less than 10% of the total damage gets nothing.
+    min-damage-percent: 0.0
+    # Count the percent from damage recorded by the tracker only (true),
+    # or from "at least 1.0" (false). Matters for mobs with untracked damage.
+    min-damage-percent-of-tracked-only: true
+    # Minimal absolute damage. 0 = disabled.
+    min-damage-flat: 0.0
+    # Bonus weight for the last hit (added to the killer's damage).
+    kill-credit: 0.0
+    # Items that never take part in the distribution (they drop vanilla).
+    item-blacklist: []
+    # Chance (0.0 - 1.0) that an item takes part in the distribution at all.
+    item-chance: 1.0
+
+  # Where items go when the inventory is full:
+  #   VAULT - into the player's personal vault (/sd vault)  [recommended]
+  #   DROP  - drop at the OWNER's feet, protected from other players
+  #   VOID  - destroy (logged when debug: true)
+  overflow:
+    action: VAULT
+    # Rename the dropped item with the owner's name.
+    owner-tag-name: true
+    # Pickup delay of the dropped item, in ticks.
+    pickup-delay-ticks: 40
+    # How long the dropped item is protected, in seconds. 0 = use drop-protection.protect-seconds.
+    protect-seconds: 120
+
+  anti-spam:
+    # Personal distribution rate limit. Above the limit the loot goes to "action".
+    # Protects against "100 mobs in one tick" and inventory flooding.
+    rate-limit:
+      enabled: true
+      max-distributions: 30
+      window-seconds: 10
+      action: VAULT
+
+  anti-farm:
+    # A mob killed too soon after spawning keeps its vanilla drop.
+    enabled: true
+    spawn-grace-seconds: 10
+    # Require the plugin to have seen the spawn event itself. Stricter, but mobs
+    # spawned before the plugin started (or before a reload) will not be distributed.
+    require-known-spawn-time: false
+    # Skip baby animals (Ageable).
+    skip-babies: true
+    # Skip mobs from a monster spawner (SpawnReason.SPAWNER).
+    skip-spawner-mobs: false
+    # Skip mobs from a spawn egg.
+    skip-spawner-egg-mobs: false
+    # Skip mobs with a custom name (name tag / /summon).
+    skip-named-mobs: false
+    # Skip any other spawn reasons (names as in CreatureSpawnEvent.SpawnReason).
+    skip-spawn-reasons: []
+
+  experience:
+    # Who gets the experience:
+    #   DISABLED  - no experience orb appears at all
+    #   KILLER    - everything to the killer
+    #   TOP_SHARE - everything to the participant with the highest weight
+    #   SPLIT     - split proportionally to participant weight
+    mode: SPLIT
+
+# ---------------------------------------------------------------------------
+# Named rules. Checked top to bottom, the FIRST match wins.
+# Every key that is not declared here is inherited from default-rule.
+#
+#   entities:            list of EntityType (empty = any)
+#   entities-inverted:   true = the rule applies to everything EXCEPT the list
+#   worlds:              list of worlds (empty = any)
+#   worlds-inverted:     true = every world EXCEPT the list
+#   regions:             boxes (world + center + radius per axis), no WorldGuard needed
+# ---------------------------------------------------------------------------
+rules:
+  bosses:
+    entities:
+      - WITHER
+      - ENDER_DRAGON
+      - ELDER_GUARDIAN
+    distribution:
+      mode: DAMAGE
+      min-players: 1
+      split-stacks: true
+    eligibility:
+      kill-credit: 10.0
+      min-damage-percent: 5.0
+      max-distance: 96.0
+    experience:
+      mode: SPLIT
+
+  hostile:
+    entities:
+      - ZOMBIE
+      - SKELETON
+      - CREEPER
+      - SPIDER
+      - ENDERMAN
+    distribution:
+      mode: DAMAGE
+      min-players: 2
+
+  farm-mobs:
+    # Example of a strict rule for farms: keep the anti-farm checks tight.
+    entities:
+      - PIG
+      - COW
+      - SHEEP
+      - CHICKEN
+    anti-farm:
+      enabled: true
+      spawn-grace-seconds: 30
+      skip-spawner-mobs: true
+
+# ---------------------------------------------------------------------------
+# Loot vault (/sd vault)
+# ---------------------------------------------------------------------------
+vault:
+  enabled: true
+  max-entries-per-player: 54
+  # 0 = never delete entries.
+  expire-after-days: 0
+  notify-on-store: true
+
+# ---------------------------------------------------------------------------
+# Protection of the dropped (fallback) loot.
+# Applies only to items that actually reached the ground.
+# ---------------------------------------------------------------------------
+drop-protection:
+  enabled: true
+  protect-seconds: 120
+  # Other players cannot pick it up.
+  block-other-players: true
+  # Mobs (zombies, foxes, ...) cannot pick it up.
+  block-mob-pickup: true
+  # Hoppers and hopper minecarts cannot collect it.
+  block-hoppers: true
+  # Explosions, fire and lava cannot destroy it.
+  cancel-explosion-loss: true
+
+# ---------------------------------------------------------------------------
+# Global limits and compatibility
+# ---------------------------------------------------------------------------
+limits:
+  # How many silent distributions are allowed per tick. When the tick is
+  # overloaded the remaining deaths are handled vanilla (TPS protection).
+  global-distributions-per-tick: 64
+  # If the drop list is already empty when our handler runs (another plugin
+  # cancelled or took the loot), do not interfere. Prevents conflicts and duplicates.
+  skip-if-drops-tampered: true
+
+# ---------------------------------------------------------------------------
+# Contribution tracker
+# ---------------------------------------------------------------------------
+tracker:
+  # How long damage against a mob is remembered, in seconds.
+  damage-window-seconds: 15
+  # Maximum number of tracked players per mob.
+  max-contributors-per-mob: 24
+  # Remember spawn time and reason (required by anti-farm).
+  track-spawns: true
+  # true = record only player-caused spawns (spawner, egg, command).
+  track-only-player-caused-spawns: false
+
+# ---------------------------------------------------------------------------
+# Feedback for the loot receiver (no particles, no item-drop sound)
+# ---------------------------------------------------------------------------
+feedback:
+  sound:
+    enabled: true
+    # Any vanilla Sound name. Empty string or enabled: false = complete silence.
+    name: ENTITY_ITEM_PICKUP
+    volume: 0.35
+    pitch: 1.6
+  action-bar:
+    enabled: true
+  chat:
+    enabled: false
+  title:
+    enabled: false
+
+# Weight bonus through permissions: silentdrop.multiplier.1.5 = share x1.5
+share:
+  permission-multiplier:
+    enabled: true
+    node: "silentdrop.multiplier"
+    cap: 4.0
+  # true = a player with silentdrop.bypass takes no part in the distribution at all.
+  bypass-skips-distribution: true
+
+# Display name of a dropped (overflow) item. Placeholders: %player%, %item%.
+# Supports & color codes and &#RRGGBB.
+overflow-display-name-format: "&7[&e%player%&7]&r &o%item%"
