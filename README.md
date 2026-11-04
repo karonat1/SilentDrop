@@ -5,9 +5,9 @@
 
 **No ground drops. No theft. No lag. Just instant, fair distribution.**
 
-[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/karonat/SilentDrop/releases)
+[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/karonat1/SilentDrop/releases/tag/release)
 [![Minecraft](https://img.shields.io/badge/Minecraft-1.16.5--1.20.1-green.svg)](https://www.spigotmc.org/)
-[![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](LICENSE.txt)
 [![Java](https://img.shields.io/badge/Java-8%2B-orange.svg)](https://www.java.com/)
 
 [Download](https://github.com/karonat/SilentDrop/releases) • [Spigot Page](https://www.spigotmc.org/resources/silentdrop.XXXXX/) • [Release](https://github.com/karonat1/SilentDrop/releases/tag/release)
